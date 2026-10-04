@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Try Out Bintara TNI AD 2026</title>
+<style>
+:root{--green:#176b45;--dark:#10251c;--gold:#d7ae45;--bg:#f2f5f4;--card:#fff;--muted:#68736e;--danger:#b73535}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--dark)}
+header{background:linear-gradient(135deg,#0d3d29,#176b45);color:#fff;padding:28px 18px;position:sticky;top:0;z-index:5;box-shadow:0 4px 18px #0002}
+.wrap{max-width:900px;margin:auto}h1{margin:0;font-size:25px}header p{margin:7px 0 0;color:#dbeee4}.top{display:flex;justify-content:space-between;gap:12px;align-items:center}.timer{background:#fff;color:#123d2b;border-radius:12px;padding:10px 14px;font-weight:800;min-width:105px;text-align:center}
+.progress{height:7px;background:#ffffff33;border-radius:9px;margin-top:18px;overflow:hidden}.bar{height:100%;background:var(--gold);width:0}
+main{padding:22px 14px 90px}.card{background:var(--card);border-radius:18px;padding:20px;margin:0 0 16px;box-shadow:0 3px 15px #173a2b10;border:1px solid #dce4e0}
+.meta{font-size:13px;color:var(--green);font-weight:800;text-transform:uppercase;letter-spacing:.5px}.q{font-size:18px;font-weight:700;line-height:1.45;margin:10px 0 16px}.option{display:block;padding:13px 14px;border:1px solid #d8dfdc;border-radius:12px;margin:9px 0;cursor:pointer;transition:.15s;background:#fff}.option:hover{border-color:var(--green);background:#f5faf7}.option input{margin-right:10px;accent-color:var(--green)}
+.actions{position:sticky;bottom:0;background:#ffffffee;backdrop-filter:blur(8px);padding:14px;border-top:1px solid #ddd;z-index:4}.actions .wrap{display:flex;justify-content:space-between;gap:10px}button{border:0;border-radius:12px;padding:13px 18px;font-weight:800;cursor:pointer;font-size:15px}.submit{background:var(--green);color:#fff}.reset{background:#e9eeeb;color:var(--dark)}
+#result{display:none}.score{font-size:48px;font-weight:900;color:var(--green)}.badge{display:inline-block;padding:7px 10px;border-radius:999px;background:#e8f4ee;color:var(--green);font-weight:800}.review{margin-top:15px}.wrong{border-left:5px solid var(--danger);padding:12px 14px;background:#fff4f4;border-radius:8px;margin:10px 0}.right{border-left:5px solid var(--green);padding:12px 14px;background:#f1faf5;border-radius:8px;margin:10px 0}
+@media(max-width:600px){header{padding:20px 14px}h1{font-size:20px}.timer{font-size:14px;min-width:90px}.q{font-size:16px}.card{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<div class="top"><div><h1>🇮🇩 Try Out Bintara TNI AD 2026</h1><p>Simulasi Akademik • 50 Soal • 45 Menit</p></div><div class="timer" id="timer">45:00</div></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+</div>
+</header>
+<main class="wrap">
+<div id="quiz"></div>
+<section class="card" id="result">
+<div class="meta">Hasil Try Out</div>
+<div class="score" id="score">0</div>
+<p id="grade"></p>
+<div id="breakdown"></div>
+<div class="review" id="review"></div>
+</section>
+</main>
+<div class="actions"><div class="wrap">
+<button class="reset" onclick="resetQuiz()">Ulangi</button><button class="submit" onclick="finish()">Kumpulkan Jawaban</button>
+</div></div>
+<script>
+const questions = [{"n": 1, "q": "Jika 15% dari suatu bilangan adalah 45, bilangan tersebut adalah...", "opts": ["250", "300", "350", "400"], "ans": 1, "section": "Matematika"}, {"n": 2, "q": "Hasil dari 3/4 + 5/6 - 1/3 adalah...", "opts": ["1", "1¼", "1⅓", "1½"], "ans": 0, "section": "Matematika"}, {"n": 3, "q": "Sebuah kendaraan menempuh 180 km dalam waktu 3 jam. Jika kecepatannya menjadi 80 km/jam, waktu yang diperlukan adalah...", "opts": ["2 jam", "2 jam 15 menit", "2 jam 30 menit", "3 jam"], "ans": 1, "section": "Matematika"}, {"n": 4, "q": "Deret: 4, 9, 19, 39, 79, ...", "opts": ["149", "159", "169", "179"], "ans": 1, "section": "Matematika"}, {"n": 5, "q": "Sebuah barang setelah diskon 20% menjadi Rp240.000. Harga sebelum diskon adalah...", "opts": ["Rp280.000", "Rp300.000", "Rp320.000", "Rp340.000"], "ans": 1, "section": "Matematika"}, {"n": 6, "q": "Jika 2x + 3y = 19 dan x = 2, maka y = ...", "opts": ["4", "5", "6", "7"], "ans": 1, "section": "Matematika"}, {"n": 7, "q": "Perbandingan jumlah prajurit A dan B adalah 5 : 7. Jika jumlah seluruhnya 72 orang, jumlah B adalah...", "opts": ["30", "35", "40", "42"], "ans": 3, "section": "Matematika"}, {"n": 8, "q": "Rata-rata lima bilangan adalah 24. Jika empat bilangan adalah 18, 20, 25, dan 27, bilangan kelima adalah...", "opts": ["28", "30", "32", "35"], "ans": 1, "section": "Matematika"}, {"n": 9, "q": "Sebuah persegi memiliki luas 196 cm². Kelilingnya adalah...", "opts": ["48 cm", "52 cm", "56 cm", "64 cm"], "ans": 2, "section": "Matematika"}, {"n": 10, "q": "Jika x² - 9x + 20 = 0, nilai x yang mungkin adalah...", "opts": ["2 dan 10", "4 dan 5", "3 dan 6", "5 dan 6"], "ans": 1, "section": "Matematika"}, {"n": 11, "q": "Kalimat yang paling efektif adalah...", "opts": ["Para peserta semuanya wajib hadir.", "Semua para peserta wajib hadir.", "Para peserta wajib hadir.", "Para peserta-peserta wajib hadir."], "ans": 2, "section": "Bahasa Indonesia"}, {"n": 12, "q": "Kata baku yang tepat adalah...", "opts": ["praktek", "praktekkan", "praktik", "praktikan"], "ans": 2, "section": "Bahasa Indonesia"}, {"n": 13, "q": "Sinonim kata esensial adalah...", "opts": ["tambahan", "pokok", "sementara", "biasa"], "ans": 1, "section": "Bahasa Indonesia"}, {"n": 14, "q": "Antonim kata konvensional adalah...", "opts": ["tradisional", "umum", "modern", "lama"], "ans": 2, "section": "Bahasa Indonesia"}, {"n": 15, "q": "Meskipun hujan deras, para peserta tetap mengikuti kegiatan. Kata 'meskipun' menunjukkan...", "opts": ["sebab", "tujuan", "pertentangan", "penambahan"], "ans": 2, "section": "Bahasa Indonesia"}, {"n": 16, "q": "Kalimat yang menggunakan tanda baca dengan benar adalah...", "opts": ["Komandan berkata \"Laksanakan tugas dengan baik.\"", "Komandan berkata, \"Laksanakan tugas dengan baik.\"", "Komandan berkata \"Laksanakan tugas dengan baik\".", "Komandan, berkata: \"Laksanakan tugas dengan baik.\""], "ans": 1, "section": "Bahasa Indonesia"}, {"n": 17, "q": "Kata implementasi berarti...", "opts": ["perencanaan", "pelaksanaan", "penilaian", "pembatalan"], "ans": 1, "section": "Bahasa Indonesia"}, {"n": 18, "q": "Kalimat yang merupakan opini adalah...", "opts": ["Indonesia merdeka pada 17 Agustus 1945.", "Jakarta merupakan salah satu kota di Indonesia.", "Menurut saya, pendidikan adalah hal paling penting dalam kehidupan.", "Air membeku pada suhu 0°C pada tekanan normal."], "ans": 2, "section": "Bahasa Indonesia"}, {"n": 19, "q": "'Ia bekerja keras sehingga memperoleh hasil yang memuaskan.' Hubungan 'sehingga' adalah...", "opts": ["sebab-akibat", "pertentangan", "pilihan", "penambahan"], "ans": 0, "section": "Bahasa Indonesia"}, {"n": 20, "q": "Penulisan kata yang benar adalah...", "opts": ["bertanggung jawab", "bertanggungjawab", "ber tanggung jawab", "bertanggung-jawab"], "ans": 0, "section": "Bahasa Indonesia"}, {"n": 21, "q": "If I ___ enough time, I will help you.", "opts": ["have", "had", "having", "has"], "ans": 0, "section": "Bahasa Inggris"}, {"n": 22, "q": "The soldiers ___ their training yesterday.", "opts": ["complete", "completes", "completed", "completing"], "ans": 2, "section": "Bahasa Inggris"}, {"n": 23, "q": "Choose the correct sentence.", "opts": ["He don't like coffee.", "He doesn't likes coffee.", "He doesn't like coffee.", "He not like coffee."], "ans": 2, "section": "Bahasa Inggris"}, {"n": 24, "q": "The synonym of brave is...", "opts": ["afraid", "courageous", "weak", "nervous"], "ans": 1, "section": "Bahasa Inggris"}, {"n": 25, "q": "The opposite of ancient is...", "opts": ["old", "historic", "modern", "traditional"], "ans": 2, "section": "Bahasa Inggris"}, {"n": 26, "q": "'The commander has given an order.' The sentence is in...", "opts": ["Simple Past", "Present Perfect", "Simple Present", "Future"], "ans": 1, "section": "Bahasa Inggris"}, {"n": 27, "q": "'The soldiers are preparing for the examination.' Preparing means...", "opts": ["meninggalkan", "mempersiapkan", "menyelesaikan", "menghindari"], "ans": 1, "section": "Bahasa Inggris"}, {"n": 28, "q": "My brother is ___ than me.", "opts": ["tall", "tallest", "taller", "more tall"], "ans": 2, "section": "Bahasa Inggris"}, {"n": 29, "q": "Where did you go yesterday?", "opts": ["I go to school.", "I went to school.", "I am going to school.", "I will go to school."], "ans": 1, "section": "Bahasa Inggris"}, {"n": 30, "q": "'Although he was tired, he continued working.' Although means...", "opts": ["karena", "sehingga", "meskipun", "sebelum"], "ans": 2, "section": "Bahasa Inggris"}, {"n": 31, "q": "Rumusan Pancasila terdapat dalam Pembukaan UUD 1945 pada alinea...", "opts": ["pertama", "kedua", "ketiga", "keempat"], "ans": 3, "section": "Wawasan Kebangsaan"}, {"n": 32, "q": "Sila kedua Pancasila adalah...", "opts": ["Persatuan Indonesia", "Kemanusiaan yang Adil dan Beradab", "Keadilan Sosial bagi Seluruh Rakyat Indonesia", "Kerakyatan yang Dipimpin oleh Hikmat Kebijaksanaan"], "ans": 1, "section": "Wawasan Kebangsaan"}, {"n": 33, "q": "Bhinneka Tunggal Ika memiliki makna...", "opts": ["Bersatu kita teguh", "Berbeda-beda tetapi tetap satu", "Satu bangsa satu bahasa", "Bersama membangun negara"], "ans": 1, "section": "Wawasan Kebangsaan"}, {"n": 34, "q": "UUD 1945 pertama kali disahkan pada...", "opts": ["17 Agustus 1945", "18 Agustus 1945", "20 Agustus 1945", "22 Agustus 1945"], "ans": 1, "section": "Wawasan Kebangsaan"}, {"n": 35, "q": "Salah satu tujuan nasional Indonesia adalah...", "opts": ["memperluas wilayah negara", "mencerdaskan kehidupan bangsa", "menguasai negara lain", "meningkatkan kekuatan militer dunia"], "ans": 1, "section": "Wawasan Kebangsaan"}, {"n": 36, "q": "Sumpah Pemuda terjadi pada...", "opts": ["20 Mei 1908", "28 Oktober 1928", "1 Juni 1945", "17 Agustus 1945"], "ans": 1, "section": "Wawasan Kebangsaan"}, {"n": 37, "q": "Wawasan Nusantara pada dasarnya memandang Indonesia sebagai...", "opts": ["negara yang terdiri atas wilayah terpisah", "satu kesatuan wilayah dan bangsa", "kumpulan negara bagian", "negara tanpa batas wilayah"], "ans": 1, "section": "Wawasan Kebangsaan"}, {"n": 38, "q": "Bela negara merupakan tanggung jawab...", "opts": ["TNI saja", "Polri saja", "pemerintah saja", "seluruh warga negara sesuai perannya"], "ans": 3, "section": "Wawasan Kebangsaan"}, {"n": 39, "q": "Nilai utama sila ketiga Pancasila adalah...", "opts": ["individualisme", "persatuan", "persaingan", "kebebasan tanpa batas"], "ans": 1, "section": "Wawasan Kebangsaan"}, {"n": 40, "q": "Bentuk negara Indonesia adalah...", "opts": ["kerajaan", "federasi", "kesatuan", "konfederasi"], "ans": 2, "section": "Wawasan Kebangsaan"}, {"n": 41, "q": "Semua A adalah B. Sebagian B adalah C. Kesimpulan yang pasti benar adalah...", "opts": ["Semua A adalah C", "Sebagian A pasti C", "Tidak dapat dipastikan hubungan A dengan C", "Semua C adalah A"], "ans": 2, "section": "Penalaran & Pengetahuan Umum"}, {"n": 42, "q": "Dokter : Rumah Sakit = Guru : ...", "opts": ["Kantor", "Sekolah", "Pasar", "Rumah"], "ans": 1, "section": "Penalaran & Pengetahuan Umum"}, {"n": 43, "q": "Buku : Membaca = Makanan : ...", "opts": ["Memasak", "Membeli", "Makan", "Menjual"], "ans": 2, "section": "Penalaran & Pengetahuan Umum"}, {"n": 44, "q": "Deret: 2, 6, 12, 20, 30, ...", "opts": ["40", "42", "44", "46"], "ans": 1, "section": "Penalaran & Pengetahuan Umum"}, {"n": 45, "q": "Deret: 81, 27, 9, 3, ...", "opts": ["0", "1", "2", "3"], "ans": 1, "section": "Penalaran & Pengetahuan Umum"}, {"n": 46, "q": "Jika semua X adalah Y dan tidak ada Y yang Z, maka...", "opts": ["Semua X adalah Z", "Sebagian X adalah Z", "Tidak ada X yang Z", "Semua Z adalah X"], "ans": 2, "section": "Penalaran & Pengetahuan Umum"}, {"n": 47, "q": "Andi lebih cepat dari Budi. Candra lebih lambat dari Budi. Siapakah yang paling cepat?", "opts": ["Andi", "Budi", "Candra", "Tidak dapat ditentukan"], "ans": 0, "section": "Penalaran & Pengetahuan Umum"}, {"n": 48, "q": "Jika hari ini Rabu, maka 100 hari kemudian adalah...", "opts": ["Kamis", "Jumat", "Sabtu", "Minggu"], "ans": 1, "section": "Penalaran & Pengetahuan Umum"}, {"n": 49, "q": "Sebuah keluarga terdiri dari ayah, ibu, dua anak laki-laki, dan satu anak perempuan. Jumlah anggota keluarga adalah...", "opts": ["4", "5", "6", "7"], "ans": 1, "section": "Penalaran & Pengetahuan Umum"}, {"n": 50, "q": "Seorang peserta mendapat nilai 70, 80, 75, dan 85. Agar rata-ratanya menjadi 80 setelah satu nilai tambahan, nilai tambahan adalah...", "opts": ["85", "90", "95", "100"], "ans": 1, "section": "Penalaran & Pengetahuan Umum"}];
+let started=Date.now(), duration=45*60, finished=false;
+const quiz=document.getElementById('quiz'), bar=document.getElementById('bar'), timer=document.getElementById('timer');
+function render(){
+ quiz.innerHTML=questions.map((x,i)=>`<section class="card" id="q${i}">
+ <div class="meta">${x.section} • Soal ${x.n}/50</div>
+ <div class="q">${x.q}</div>
+ ${x.opts.map((o,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}"><b>${String.fromCharCode(65+j)}.</b> ${o}</label>`).join('')}
+ </section>`).join('');
+ document.querySelectorAll('input').forEach(e=>e.addEventListener('change',updateProgress));
+}
+function updateProgress(){let done=questions.filter((_,i)=>document.querySelector(`input[name=q${i}]:checked`)).length;bar.style.width=(done/questions.length*100)+'%'}
+function tick(){
+ if(finished)return;
+ let left=Math.max(0,duration-Math.floor((Date.now()-started)/1000)),m=Math.floor(left/60),s=left%60;
+ timer.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+ if(left===0)finish(true); else requestAnimationFrame(()=>setTimeout(tick,250));
+}
+function finish(auto=false){
+ if(finished)return; finished=true;
+ let correct=0, unanswered=0, by={};
+ questions.forEach((x,i)=>{
+  let el=document.querySelector(`input[name=q${i}]:checked`), val=el?+el.value:null;
+  if(val===null)unanswered++; if(val===x.ans)correct++;
+  by[x.section]??={c:0,t:0};by[x.section].t++;if(val===x.ans)by[x.section].c++;
+ });
+ let score=Math.round(correct/questions.length*100);
+ document.getElementById('score').textContent=score;
+ let grade=score>=90?'🔥 Sangat siap':score>=80?'🟢 Bagus':score>=70?'🟡 Cukup':'🔴 Perlu latihan lebih banyak';
+ document.getElementById('grade').innerHTML=`<span class="badge">${grade}</span> &nbsp; ${correct}/50 benar • ${unanswered} belum dijawab${auto?' • waktu habis':''}`;
+ document.getElementById('breakdown').innerHTML='<h3>Nilai per materi</h3>'+Object.entries(by).map(([k,v])=>`<p><b>${k}</b>: ${v.c}/${v.t} (${Math.round(v.c/v.t*100)}%)</p>`).join('');
+ document.getElementById('review').innerHTML='<h3>Pembahasan jawaban</h3>'+questions.map((x,i)=>{
+  let el=document.querySelector(`input[name=q${i}]:checked`),val=el?+el.value:null,ok=val===x.ans;
+  return `<div class="${ok?'right':'wrong'}"><b>${i+1}. ${ok?'Benar':'Salah'}</b><br>Jawaban benar: <b>${String.fromCharCode(65+x.ans)}. ${x.opts[x.ans]}</b>${val!==null?`<br>Jawaban kamu: ${String.fromCharCode(65+val)}. ${x.opts[val]}`:'<br>Belum dijawab.'}</div>`;
+ }).join('');
+ document.getElementById('result').style.display='block';
+ document.getElementById('result').scrollIntoView({behavior:'smooth'});
+ document.querySelectorAll('input').forEach(e=>e.disabled=true);
+}
+function resetQuiz(){if(confirm('Mulai ulang try out? Jawaban akan dihapus.'))location.reload()}
+render();tick();
+</script>
+</body></html>
